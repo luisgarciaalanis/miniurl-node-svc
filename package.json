@@ -1,0 +1,17 @@
+{
+  "name": "miniurl-node-svc",
+  "version": "0.0.1",
+  "description": "Mini URL service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Luis Garcia Alanis",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^17.8.1",
+    "mysql2": "^1.6.4",
+    "sequelize": "^4.42.0",
+    "sequelize-cli": "^5.4.0"
+  }
+}

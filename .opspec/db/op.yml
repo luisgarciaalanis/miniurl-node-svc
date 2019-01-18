@@ -1,0 +1,33 @@
+name: db
+description: runs MySQL database
+inputs:
+  appDir:
+    dir:
+      description: Application root direactory
+      default: .
+  DB_PASSWORD:
+    string:
+      description: password to connect to the database
+      default: password
+  DB_SCHEMA:
+    string:
+      description: name of the database to be created
+      default: miniurl
+  mysqlCnf:
+    file:
+      default: /my.cnf
+run:
+  serial:
+    - op:
+        ref: db-init
+        inputs: { appDir }
+    - container:
+        image: { ref: 'mysql:8.0.13' }
+        name: MiniURLDatabase
+        files:
+          /etc/mysql/conf.d/mysqld_settings.cnf: $(mysqlCnf) 
+        dirs: { '/var/lib/mysql': $(appDir/db/data/mysql) }
+        envVars:
+          MYSQL_ROOT_PASSWORD: $(DB_PASSWORD)
+          MYSQL_DATABASE: $(DB_SCHEMA)
+        ports: { '3306':'3306' }

@@ -1,0 +1,13 @@
+name: db-init
+description: Initializes DB
+inputs:
+  appDir:
+    dir:
+      default: .
+run:
+  container:
+    image: { ref: 'alpine:3.8' }
+    dirs: { '/app': $(appDir) }
+    files:
+      /init.sh:
+    cmd: ['/init.sh']
