@@ -1,0 +1,27 @@
+name: debug
+description: runs application for debug
+inputs:
+  DB_PASSWORD:
+    string:
+      description: password to connect to the database
+      default: password
+  DB_SCHEMA:
+    string:
+      description: name of the database to be created
+      default: miniurl
+  appDir:
+    dir:
+      default: .
+run:
+  serial:
+    - op:
+        ref: db-migrate
+        inputs: { appDir }
+    - container:
+        image: { ref: 'node:10.15-alpine' }
+        envVars:
+          DB_PASSWORD:
+          DB_SCHEMA:
+        dirs: { '/app': $(appDir) }
+        cmd: ['node', 'app/app.js']
+        workDir: '/app'

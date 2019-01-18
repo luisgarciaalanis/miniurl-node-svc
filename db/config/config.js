@@ -5,7 +5,7 @@ module.exports = {
         username: 'root',
         password: process.env.DB_PASSWORD,
         database: process.env.DB_SCHEMA,
-        host: 'localhost',
+        host: 'miniurldb',
         dialect: 'mysql',
         seederStorage: 'sequelize',
         operatorsAliases: Sequelize.Op,

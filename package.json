@@ -1,6 +1,6 @@
 {
   "name": "miniurl-node-svc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Mini URL service",
   "main": "app/app.js",
   "scripts": {
