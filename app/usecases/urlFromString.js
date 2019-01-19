@@ -14,10 +14,18 @@ const urlFromString = (rawURL) => {
         url = new URL(urlStr);
     } catch (e) {
         try {
-            // try again adding the http protocol.
-            urlStr = `http://${urlStr}`;
+            const patt = /[a-z]*:\/\//i;
+            const matched = patt.exec(rawURL);
+
+            if (!matched) {
+                urlStr = urlStr.trimLeft('/');
+
+                // try again adding the http protocol.
+                urlStr = `http://${urlStr}`;
+            }
+
             url = new URL(urlStr);
-        } catch {
+        } catch (e) {
             throw new Error('Invalid URL');
         }
     }
@@ -25,4 +33,4 @@ const urlFromString = (rawURL) => {
     return url;
 }
 
-module.export = urlFromString;
+module.exports = urlFromString;
