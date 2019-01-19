@@ -1,10 +1,22 @@
 name: debug
 description: runs application for debug
 inputs:
+  DB_USERNAME:
+    string:
+      description: username to connect to the database
+      default: root
   DB_PASSWORD:
     string:
       description: password to connect to the database
       default: password
+  DB_HOST:
+    string:
+      description: database host
+      default: miniurl
+  DB_PORT:
+    string:
+      description: database port
+      default: '3306'
   DB_SCHEMA:
     string:
       description: name of the database to be created
@@ -15,12 +27,15 @@ inputs:
 run:
   serial:
     - op:
-        ref: db-migrate
+        ref: init
         inputs: { appDir }
     - container:
         image: { ref: 'node:10.15-alpine' }
         envVars:
+          DB_USERNAME:
           DB_PASSWORD:
+          DB_HOST:
+          DB_PORT:
           DB_SCHEMA:
         dirs: { '/app': $(appDir) }
         cmd: ['node', 'app/app.js']

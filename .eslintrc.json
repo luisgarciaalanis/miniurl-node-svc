@@ -20,6 +20,7 @@
             "single"
         ],
         "no-var": "error",
+        "class-methods-use-this": "off",
         "indent": [
             "error",
             4,

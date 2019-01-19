@@ -1,5 +1,12 @@
-const Main = () => {
-    console.log('Hello World!');
-};
+const server = require('./server');
+const appsettings = require('./core/settings/AppSettings');
 
-Main();
+class App {
+    static Run() {
+        if (appsettings.ok()) {
+            server.start();
+        }
+    }
+}
+
+App.Run();
