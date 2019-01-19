@@ -9,6 +9,12 @@
     "parserOptions": {
         "ecmaVersion": 2018
     },
+    "max-len": [
+        "error",
+        {
+            "code": 160
+        }
+    ],
     "rules": {
         "prefer-const": "error",
         "linebreak-style": [

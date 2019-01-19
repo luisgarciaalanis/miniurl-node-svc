@@ -1,9 +1,9 @@
 const server = require('./server');
-const appsettings = require('./core/settings/AppSettings');
+const appSettings = require('./core/settings/AppSettings');
 
 class App {
     static Run() {
-        if (appsettings.ok()) {
+        if (appSettings.ok()) {
             server.start();
         }
     }
