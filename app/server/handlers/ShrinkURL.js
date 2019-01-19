@@ -1,4 +1,3 @@
-
 const Boom = require('boom');
 const urlFromString = require('../../usecases/urlFromString');
 
@@ -17,7 +16,7 @@ class ShrinkURL {
 
         try {
             url = urlFromString(rawURL);
-        } catch {
+        } catch (e) {
             return Boom.badRequest('Invalid URL');
         }
 
