@@ -4,7 +4,8 @@
   "description": "Mini URL service",
   "main": "app/app.js",
   "scripts": {
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "coverage": "jest --coverage"
   },
   "author": "Luis Garcia Alanis",
   "license": "ISC",
