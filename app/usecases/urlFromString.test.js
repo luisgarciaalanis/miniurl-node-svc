@@ -1,5 +1,7 @@
 const urlFromString = require('./urlFromString');
 
+/* global it, describe, expect */
+
 /**
  * Tests that the url from urlFromString() contains the correct properties.
  * @param {*} testData data object containing the expected properties.
@@ -15,25 +17,25 @@ const testURL = (testData) => {
     expect(url).toHaveProperty('pathname', testData.pathname);
     expect(url).toHaveProperty('search', testData.search);
     expect(url).toHaveProperty('hash', testData.hash);
-}
+};
 
 /**
  * Convenience function to create a row of url test data.
  *
- * @param {string} inputURL 
- * @param {string} href 
- * @param {string} protocol 
- * @param {string} username 
- * @param {string} password 
- * @param {string} hostname 
- * @param {string} port 
- * @param {string} pathname 
- * @param {string} search 
- * @param {string} hash 
+ * @param {string} inputURL
+ * @param {string} href
+ * @param {string} protocol
+ * @param {string} username
+ * @param {string} password
+ * @param {string} hostname
+ * @param {string} port
+ * @param {string} pathname
+ * @param {string} search
+ * @param {string} hash
  */
 const urlTC = (inputURL, href, protocol, username, password, hostname, port, pathname, search, hash) => ({
-    inputURL, href, protocol, username, password, hostname, port, pathname, search, hash
-})
+    inputURL, href, protocol, username, password, hostname, port, pathname, search, hash,
+});
 
 describe('test urlFromString with...', () => {
     /**
@@ -46,18 +48,21 @@ describe('test urlFromString with...', () => {
             urlTC('http://www.google.com', 'http://www.google.com/', 'http:', '', '', 'www.google.com', '', '/', '', ''),
             urlTC('http://www.朋友.com', 'http://www.xn--iorv16b.com/', 'http:', '', '', 'www.xn--iorv16b.com', '', '/', '', ''),
             urlTC('http://www.sony.com/gof', 'http://www.sony.com/gof', 'http:', '', '', 'www.sony.com', '', '/gof', '', ''),
-            urlTC('http://www.nintendo.com/mario/bros/', 'http://www.nintendo.com/mario/bros/', 'http:', '', '', 'www.nintendo.com', '', '/mario/bros/', '', ''),
+            urlTC('http://www.nintendo.com/mario/bros/', 'http://www.nintendo.com/mario/bros/', 'http:', '', '', 'www.nintendo.com',
+                '', '/mario/bros/', '', ''),
             urlTC('ftp://whatever.info/path', 'ftp://whatever.info/path', 'ftp:', '', '', 'whatever.info', '', '/path', '', ''),
             urlTC('https://whatever.info/path', 'https://whatever.info/path', 'https:', '', '', 'whatever.info', '', '/path', '', ''),
             urlTC('https://amy:pwd@a.info/path', 'https://amy:pwd@a.info/path', 'https:', 'amy', 'pwd', 'a.info', '', '/path', '', ''),
-            urlTC('http://www.google.com?search=cats&&color=brown', 'http://www.google.com/?search=cats&&color=brown', 'http:', '', '', 'www.google.com', '', '/', '?search=cats&&color=brown', ''),
-            urlTC('http://amy:pwd@www.google.com:8080?search=cats&&color=brown#info', 'http://amy:pwd@www.google.com:8080/?search=cats&&color=brown#info', 'http:', 'amy', 'pwd', 'www.google.com', '8080', '/', '?search=cats&&color=brown', '#info'),
+            urlTC('http://www.google.com?search=cats&&color=brown', 'http://www.google.com/?search=cats&&color=brown', 'http:', '', '',
+                'www.google.com', '', '/', '?search=cats&&color=brown', ''),
+            urlTC('http://amy:pwd@www.google.com:8080?search=cats&&color=brown#info', 'http://amy:pwd@www.google.com:8080/?search=cats&&color=brown#info',
+                'http:', 'amy', 'pwd', 'www.google.com', '8080', '/', '?search=cats&&color=brown', '#info'),
         ];
 
         testCases.forEach((testCase) => {
             it(`URL: ${testCase.inputURL}`, () => {
                 testURL(testCase);
-            })
+            });
         });
     });
 
@@ -75,7 +80,7 @@ describe('test urlFromString with...', () => {
         testCases.forEach((testCase) => {
             it(`URL: ${testCase.inputURL}`, () => {
                 testURL(testCase);
-            })
+            });
         });
     });
 
@@ -95,7 +100,7 @@ describe('test urlFromString with...', () => {
         testCases.forEach((testCase) => {
             it(`URL: ${testCase.inputURL}`, () => {
                 expect(urlFromString.bind(null, testCase.inputURL)).toThrowError('Invalid URL');
-            })
+            });
         });
     });
 });
