@@ -15,7 +15,9 @@ class ShrinkURL {
             return result;
         }
 
-        return '';
+        return {
+            hash: 'abcd',
+        };
     }
 
     verifyUrlOrFail(rawURL) {
@@ -23,6 +25,10 @@ class ShrinkURL {
 
         if (!rawURL) {
             return Boom.badRequest('Missing URL');
+        }
+
+        if (rawURL.length > 2083) {
+            return Boom.uriTooLong('URL should be less or equal to 2083 characters!');
         }
 
         try {
@@ -43,10 +49,6 @@ class ShrinkURL {
         // URLs need to start with mailto:, http: or https:
         if (!url.protocol.startsWith('http')) {
             return Boom.badRequest('Invalid URL');
-        }
-
-        if (!url.href.length > 2083) {
-            return Boom.uriTooLong('URL should be less or equal to 2000 characters!');
         }
 
         /** HACK: need a better way to handle this and any other fake DNS mimic, also protect against all the

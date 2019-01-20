@@ -11,6 +11,9 @@
     },
     "rules": {
         "prefer-const": "error",
+        "object-curly-newline": "off",
+        "no-script-url": "off",
+        "no-plusplus": "off",
         "max-len": [
             "error",
             {

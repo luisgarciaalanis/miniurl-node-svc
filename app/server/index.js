@@ -33,6 +33,11 @@ class Server {
         await this.server.start();
         log.info(`Server running at: ${this.server.info.uri}`);
     }
+
+    async stop() {
+        await this.server.stop();
+        log.info('Server stopping!');
+    }
 }
 
 module.exports = new Server();
