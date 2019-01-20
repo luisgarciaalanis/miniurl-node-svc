@@ -1,26 +1,43 @@
 const Boom = require('boom');
-const urlFromString = require('../../usecases/urlFromString');
+const usecases = require('../../usecases');
 
 class ShrinkURL {
     constructor() {
         this.shrink = this.shrink.bind(this);
-        this.verifyUrlOrFail = this.verifyUrlOrFail.bind(this);
+        this.verifyUrlOrFail = this.normalizeUrlOrFail.bind(this);
     }
 
-    shrink(request) {
+    /**
+     * Shrink URL POST request handler.
+     * @param {*} request
+     */
+    async shrink(request) {
         const url = request.payload.url ? request.payload.url.trim() : '';
+        const result = this.normalizeUrlOrFail(url);
+        let hash = '';
 
-        const result = this.verifyUrlOrFail(url);
-        if (result !== true) {
+        if (Boom.isBoom(result)) {
             return result;
         }
 
+        try {
+            hash = await usecases.saveURL(result);
+        } catch (e) {
+            return Boom.internal('ups, something went wrong!');
+        }
+
         return {
-            hash: 'abcd',
+            hash,
         };
     }
 
-    verifyUrlOrFail(rawURL) {
+    /**
+     * Normalizes a rawURL, verifies that its a valid URL.
+     *
+     * @param {string} rawURL url to normalize.
+     * @returns {string|Boom} normalized URL if succeeded, Boom error otherwise.
+     */
+    normalizeUrlOrFail(rawURL) {
         let url = null;
 
         if (!rawURL) {
@@ -32,7 +49,7 @@ class ShrinkURL {
         }
 
         try {
-            url = urlFromString(rawURL);
+            url = usecases.urlFromString(rawURL);
         } catch (e) {
             return Boom.badRequest('Invalid URL');
         }
@@ -43,7 +60,7 @@ class ShrinkURL {
         }
 
         if (url.protocol === 'mailto:') {
-            return true;
+            return url.href;
         }
 
         // URLs need to start with mailto:, http: or https:
@@ -62,7 +79,7 @@ class ShrinkURL {
             return Boom.forbidden('Nice try!!! you script kiddie!');
         }
 
-        return true;
+        return url.href;
     }
 }
 
