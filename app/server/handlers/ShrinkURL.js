@@ -2,9 +2,20 @@ const Boom = require('boom');
 const urlFromString = require('../../usecases/urlFromString');
 
 class ShrinkURL {
+    constructor() {
+        this.shrink = this.shrink.bind(this);
+        this.verifyUrlOrFail = this.verifyUrlOrFail.bind(this);
+    }
+
     shrink(request) {
         const url = request.payload.url ? request.payload.url.trim() : '';
-        this.verifyUrlOrFail(url);
+
+        const result = this.verifyUrlOrFail(url);
+        if (result !== true) {
+            return result;
+        }
+
+        return '';
     }
 
     verifyUrlOrFail(rawURL) {
@@ -34,7 +45,7 @@ class ShrinkURL {
             return Boom.badRequest('Invalid URL');
         }
 
-        if (!url.href.length > 2000) {
+        if (!url.href.length > 2083) {
             return Boom.uriTooLong('URL should be less or equal to 2000 characters!');
         }
 
