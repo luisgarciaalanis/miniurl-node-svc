@@ -6,6 +6,7 @@ const Urls = require('./Urls');
 class Models {
     init(sequelize) {
         this.urls = sequelize.import('urls', Urls);
+        return true;
     }
 }
 
