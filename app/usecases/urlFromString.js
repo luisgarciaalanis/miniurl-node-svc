@@ -2,7 +2,7 @@
  * Parses a url from a string.
  *
  * @param {string} rawURL string containing URL.
- * 
+ *
  * @returns {URL}
  */
 const urlFromString = (rawURL) => {
@@ -31,6 +31,6 @@ const urlFromString = (rawURL) => {
     }
 
     return url;
-}
+};
 
 module.exports = urlFromString;
