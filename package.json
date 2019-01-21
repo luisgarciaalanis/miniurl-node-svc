@@ -13,6 +13,7 @@
   "dependencies": {
     "boom": "^7.3.0",
     "hapi": "^18.0.0",
+    "hashids": "1.2.2",
     "mysql2": "^1.6.4",
     "sequelize": "^4.42.0",
     "sequelize-cli": "^5.4.0",
