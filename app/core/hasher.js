@@ -7,6 +7,7 @@ class Hasher {
     constructor() {
         this.generateForID = this.generateForID.bind(this);
         this.decode = this.decode.bind(this);
+
         this.salt = 'dolor sit amet, consectetur adipiscing elit. Aliquam elementum ipsum';
         this.base32Alphabet = 'abcdefghijkmnopqrstuvwxyz2345679';
         this.hashids = new Hashids(this.salt, 5, this.base32Alphabet);

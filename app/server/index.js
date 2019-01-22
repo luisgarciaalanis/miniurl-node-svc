@@ -5,16 +5,19 @@ const shrinkURL = require('./handlers/ShrinkURL');
 class Server {
     constructor() {
         const prefix = '/api/v1';
+        const options = {
+            cors: true,
+        };
 
         this.server = Hapi.server({
-            port: 3000,
+            port: 7000,
             host: 'localhost',
         });
 
         this.routes = [
             /** api routes * */
-            { method: 'POST', path: `${prefix}/shrink`, handler: shrinkURL.shrink },
-            { method: 'POST', path: `${prefix}/{id}`, handler: () => { } },
+            { method: 'POST', path: `${prefix}/shrink`, handler: shrinkURL.shrink, options },
+            { method: 'GET', path: `${prefix}/{id}`, handler: () => { }, options },
         ];
 
         this.server.route(this.routes);

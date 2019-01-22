@@ -15,6 +15,7 @@ class MiniURLDB {
      */
     async init() {
         let connected = false;
+
         const dbSchema = appSettings.valueOf(appSettings.DB_SCHEMA);
         const dbUsername = appSettings.valueOf(appSettings.DB_USERNAME);
         const dbPassword = appSettings.valueOf(appSettings.DB_PASSWORD);
