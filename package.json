@@ -11,6 +11,7 @@
   "author": "Luis Garcia Alanis",
   "license": "ISC",
   "dependencies": {
+    "@types/hapi": "^18.0.0",
     "boom": "^7.3.0",
     "hapi": "^18.0.0",
     "hashids": "1.2.2",

@@ -31,7 +31,7 @@ run:
         inputs: { appDir }
     - container:
         image: { ref: 'node:10.15-alpine' }
-        name: debug
+        name: miniurl-node-svc
         envVars:
           DB_USERNAME:
           DB_PASSWORD:
