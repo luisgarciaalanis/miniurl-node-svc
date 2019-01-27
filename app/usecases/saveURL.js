@@ -22,7 +22,7 @@ const saveURL = async (url) => {
         const newUrlID = await miniUrlDB.reserveUrl();
         hash = hasher.generateForID(newUrlID);
 
-        const foundCustom = await miniUrlDB.findUrl(hash, true);
+        const foundCustom = await miniUrlDB.findUrlEx(hash, true);
 
         if (!foundCustom) {
             saved = await miniUrlDB.updateURL(newUrlID, url, hash);

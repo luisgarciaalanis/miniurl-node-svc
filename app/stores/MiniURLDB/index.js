@@ -9,6 +9,7 @@ class MiniURLDB {
         this.findUrlHash = this.findUrlHash.bind(this);
         this.storeUrl = this.updateURL.bind(this);
         this.findUrl = this.findUrl.bind(this);
+        this.findUrlEx = this.findUrlEx.bind(this);
         this.storeCustomUrl = this.storeCustomUrl.bind(this);
     }
 
@@ -89,16 +90,39 @@ class MiniURLDB {
     }
 
     /**
-     * finds a url for a hash.
+     * finds a url for a hash or custom hash.
      * @param {string} hash
      * @param {boolean} isCustom true to find a custom hash, false to find a normal hash.
      * @returns {string|null} the url if found null otherwise.
      */
-    async findUrl(hash, isCustom) {
+    async findUrlEx(hash, isCustom) {
         let foundUrl = null;
 
         try {
             foundUrl = await models.urls.findOne({ where: { hash, isCustom } });
+        } catch (e) {
+            log.error('findUrl: failed to fetchOne url');
+            log.error(e);
+            throw e;
+        }
+
+        if (!foundUrl) {
+            return null;
+        }
+
+        return foundUrl.url;
+    }
+
+    /**
+     * finds a url for a hash.
+     * @param {string} hash
+     * @returns {string|null} the url if found null otherwise.
+     */
+    async findUrl(hash) {
+        let foundUrl = null;
+
+        try {
+            foundUrl = await models.urls.findOne({ where: { hash } });
         } catch (e) {
             log.error('findUrl: failed to fetchOne url');
             log.error(e);

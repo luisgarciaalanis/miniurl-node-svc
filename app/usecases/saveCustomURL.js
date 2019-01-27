@@ -9,7 +9,7 @@ const { HashAlreadyTaken } = require('./errors');
  * @param {string} hash
  */
 const saveCustomURL = async (url, hash) => {
-    const foundNonCustomURL = await miniUrlDB.findUrl(hash, false);
+    const foundNonCustomURL = await miniUrlDB.findUrlEx(hash, false);
 
     // 1. Fail if the hash is already a non custom hash.
     if (foundNonCustomURL) {
