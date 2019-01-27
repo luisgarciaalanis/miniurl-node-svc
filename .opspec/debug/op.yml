@@ -12,7 +12,7 @@ inputs:
   DB_HOST:
     string:
       description: database host
-      default: miniurl
+      default: miniurldb
   DB_PORT:
     string:
       description: database port
@@ -31,7 +31,7 @@ run:
         inputs: { appDir }
     - container:
         image: { ref: 'node:10.15-alpine' }
-        name: miniurl-node-svc
+        name: miniurl-svc
         envVars:
           DB_USERNAME:
           DB_PASSWORD:

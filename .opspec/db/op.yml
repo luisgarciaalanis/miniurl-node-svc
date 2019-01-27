@@ -23,7 +23,7 @@ run:
         inputs: { appDir }
     - container:
         image: { ref: 'mysql:8.0.13' }
-        name: MiniURLDatabase
+        name: miniurldb
         files:
           /etc/mysql/conf.d/mysqld_settings.cnf: $(mysqlCnf) 
         dirs: { '/var/lib/mysql': $(appDir/db/data/mysql) }
