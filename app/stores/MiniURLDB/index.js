@@ -55,7 +55,8 @@ class MiniURLDB {
         try {
             newUrl = await models.urls.create();
         } catch (e) {
-            log.error('Unable to reserve index for new URL hash');
+            log.error('reserveUrl: Unable to reserve index for new URL hash.');
+            log.error(e);
             throw e;
         }
 
@@ -68,7 +69,15 @@ class MiniURLDB {
      * @returns {string|null} the hash if found null otherwise.
      */
     async findUrlHash(url) {
-        const foundUrl = await models.urls.findOne({ where: { url } });
+        let foundUrl = null;
+
+        try {
+            foundUrl = await models.urls.findOne({ where: { url } });
+        } catch (e) {
+            log.error('findUrlHash failed to fetchOne url');
+            log.error(e);
+            throw e;
+        }
 
         if (!foundUrl) {
             return null;
@@ -83,7 +92,15 @@ class MiniURLDB {
      * @returns {string|null} the url if found null otherwise.
      */
     async findUrl(hash) {
-        const foundUrl = await models.urls.findOne({ where: { hash } });
+        let foundUrl = null;
+
+        try {
+            foundUrl = await models.urls.findOne({ where: { hash } });
+        } catch (e) {
+            log.error('findUrl: failed to fetchOne url');
+            log.error(e);
+            throw e;
+        }
 
         if (!foundUrl) {
             return null;
@@ -101,14 +118,21 @@ class MiniURLDB {
      * @returns {boolean} true if succeeds false otherwise.
      */
     async storeUrl(id, url, hash) {
-        const result = await models.urls.update({
-            url,
-            hash,
-        }, {
-            where: {
-                id,
-            },
-        });
+        let result = null;
+
+        try {
+            result = await models.urls.update({
+                url,
+                hash,
+            }, {
+                where: {
+                    id,
+                },
+            });
+        } catch (e) {
+            log.error(`storeUrl: failed to update id: ${id} url: ${url} with hash: ${hash}`);
+            log.error(e);
+        }
 
         if (!result) {
             return false;
