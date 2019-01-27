@@ -39,6 +39,6 @@ run:
           DB_PORT:
           DB_SCHEMA:
         dirs: { '/app': $(appDir) }
-        cmd: ['node', 'app/app.js']
+        cmd: ['npx', 'nodemon', 'app/app.js']
         workDir: '/app'
         ports: { '7000':'7000' }

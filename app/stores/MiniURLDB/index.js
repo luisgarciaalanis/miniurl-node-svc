@@ -8,6 +8,7 @@ class MiniURLDB {
         this.reserveUrl = this.reserveUrl.bind(this);
         this.findUrlHash = this.findUrlHash.bind(this);
         this.storeUrl = this.storeUrl.bind(this);
+        this.findUrl = this.findUrl.bind(this);
     }
 
     /**
@@ -74,6 +75,21 @@ class MiniURLDB {
         }
 
         return foundUrl.hash;
+    }
+
+    /**
+     * finds a url for a hash.
+     * @param {string} hash
+     * @returns {string|null} the url if found null otherwise.
+     */
+    async findUrl(hash) {
+        const foundUrl = await models.urls.findOne({ where: { hash } });
+
+        if (!foundUrl) {
+            return null;
+        }
+
+        return foundUrl.url;
     }
 
     /**
