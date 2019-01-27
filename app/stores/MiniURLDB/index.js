@@ -7,8 +7,9 @@ class MiniURLDB {
     constructor() {
         this.reserveUrl = this.reserveUrl.bind(this);
         this.findUrlHash = this.findUrlHash.bind(this);
-        this.storeUrl = this.storeUrl.bind(this);
+        this.storeUrl = this.updateURL.bind(this);
         this.findUrl = this.findUrl.bind(this);
+        this.storeCustomUrl = this.storeCustomUrl.bind(this);
     }
 
     /**
@@ -66,13 +67,14 @@ class MiniURLDB {
     /**
      * finds a hash for a url.
      * @param {string} url
+     * @param {boolean} isCustom true to custom urls, false to find non custom urls.
      * @returns {string|null} the hash if found null otherwise.
      */
-    async findUrlHash(url) {
+    async findUrlHash(url, isCustom) {
         let foundUrl = null;
 
         try {
-            foundUrl = await models.urls.findOne({ where: { url } });
+            foundUrl = await models.urls.findOne({ where: { url, isCustom } });
         } catch (e) {
             log.error('findUrlHash failed to fetchOne url');
             log.error(e);
@@ -89,13 +91,14 @@ class MiniURLDB {
     /**
      * finds a url for a hash.
      * @param {string} hash
+     * @param {boolean} isCustom true to find a custom hash, false to find a normal hash.
      * @returns {string|null} the url if found null otherwise.
      */
-    async findUrl(hash) {
+    async findUrl(hash, isCustom) {
         let foundUrl = null;
 
         try {
-            foundUrl = await models.urls.findOne({ where: { hash } });
+            foundUrl = await models.urls.findOne({ where: { hash, isCustom } });
         } catch (e) {
             log.error('findUrl: failed to fetchOne url');
             log.error(e);
@@ -110,20 +113,44 @@ class MiniURLDB {
     }
 
     /**
-     * Stores a URL in the database.
+     * finds a url for a hash.
+     * @param {string} hash
+     * @returns {string|null} the url if found null otherwise.
+     */
+    async findAnyUrl(hash) {
+        let foundUrl = null;
+
+        try {
+            foundUrl = await models.urls.findOne({ where: { hash } });
+        } catch (e) {
+            log.error('findAnyUrl: failed to fetchOne url');
+            log.error(e);
+            throw e;
+        }
+
+        if (!foundUrl) {
+            return null;
+        }
+
+        return foundUrl.url;
+    }
+
+    /**
+     * Updates a URL in the database.
      * @param {*} id id of the existing reserved URL.
      * @param {*} url url to save.
      * @param {*} hash hash associated with the url.
      *
      * @returns {boolean} true if succeeds false otherwise.
      */
-    async storeUrl(id, url, hash) {
+    async updateURL(id, url, hash) {
         let result = null;
 
         try {
             result = await models.urls.update({
                 url,
                 hash,
+                isCustom: false,
             }, {
                 where: {
                     id,
@@ -131,6 +158,34 @@ class MiniURLDB {
             });
         } catch (e) {
             log.error(`storeUrl: failed to update id: ${id} url: ${url} with hash: ${hash}`);
+            log.error(e);
+        }
+
+        if (!result) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Stores a custom URL in the database.
+     * @param {*} url url to save.
+     * @param {*} hash hash associated with the url.
+     *
+     * @returns {boolean} true if succeeds false otherwise.
+     */
+    async storeCustomUrl(url, hash) {
+        let result = null;
+
+        try {
+            result = await models.urls.insert({
+                url,
+                hash,
+                isCustom: true,
+            });
+        } catch (e) {
+            log.error(`storeCustomUrl: failed to insert custom url: ${url} with hash: ${hash}`);
             log.error(e);
         }
 

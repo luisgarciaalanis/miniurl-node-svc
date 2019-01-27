@@ -20,6 +20,11 @@ const Urls = (sequelize, type) => sequelize.define('urls', {
         primaryKey: true,
         defaultValue: '~',
     },
+    isCustom: {
+        type: type.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
 });
 
 module.exports = Urls;

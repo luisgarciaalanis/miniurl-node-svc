@@ -8,18 +8,29 @@ const hasher = require('../core/hasher');
  */
 const saveURL = async (url) => {
     // 1. if the url is already stored return the hash.
-    let hash = await miniUrlDB.findUrlHash(url);
+    let hash = await miniUrlDB.findUrlHash(url, false);
 
     if (hash) {
         return hash;
     }
 
-    // 2. Otherwise store the URL and return the new hash.
-    const newUrlID = await miniUrlDB.reserveUrl();
-    hash = hasher.generateForID(newUrlID);
-    const result = await miniUrlDB.storeUrl(newUrlID, url, hash);
+    let saved = false;
 
-    if (result) {
+    /* eslint-disable no-await-in-loop */
+    while (!saved) {
+        // 2. Otherwise store the URL and return the new hash.
+        const newUrlID = await miniUrlDB.reserveUrl();
+        hash = hasher.generateForID(newUrlID);
+
+        const foundCustom = await miniUrlDB.findUrl(hash, true);
+
+        if (!foundCustom) {
+            saved = await miniUrlDB.updateURL(newUrlID, url, hash);
+        }
+    }
+    /* eslint-enable no-await-in-loop */
+
+    if (saved) {
         return hash;
     }
 
