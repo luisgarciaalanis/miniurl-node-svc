@@ -75,7 +75,9 @@ class MiniURLDB {
         let foundUrl = null;
 
         try {
-            foundUrl = await models.urls.findOne({ where: { url, isCustom } });
+            foundUrl = await models.urls.findOne({
+                where: Sequelize.and({ url }, { isCustom }),
+            });
         } catch (e) {
             log.error('findUrlHash failed to fetchOne url');
             log.error(e);
@@ -99,7 +101,9 @@ class MiniURLDB {
         let foundUrl = null;
 
         try {
-            foundUrl = await models.urls.findOne({ where: { hash, isCustom } });
+            foundUrl = await models.urls.findOne({
+                where: Sequelize.and({ hash }, { isCustom }),
+            });
         } catch (e) {
             log.error('findUrl: failed to fetchOne url');
             log.error(e);
@@ -203,14 +207,13 @@ class MiniURLDB {
         let result = null;
 
         try {
-            result = await models.urls.insert({
+            result = await models.urls.create({
                 url,
                 hash,
                 isCustom: true,
             });
         } catch (e) {
             log.error(`storeCustomUrl: failed to insert custom url: ${url} with hash: ${hash}`);
-            log.error(e);
         }
 
         if (!result) {

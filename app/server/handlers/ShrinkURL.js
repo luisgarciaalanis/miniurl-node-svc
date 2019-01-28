@@ -13,15 +13,24 @@ class ShrinkURL {
      */
     async shrink(request) {
         const url = request.payload.url ? request.payload.url.trim() : '';
+        const isCustom = !!request.payload.hash;
+        let hash = isCustom ? request.payload.hash : '';
         const result = this.normalizeUrlOrFail(url);
-        let hash = '';
 
         if (Boom.isBoom(result)) {
             return result;
         }
 
+        if (isCustom && !usecases.isValidHash(hash)) {
+            return Boom.badRequest('The custom hash is invalid!');
+        }
+
         try {
-            hash = await usecases.saveURL(result);
+            if (isCustom) {
+                hash = await usecases.saveCustomURL(result, hash);
+            } else {
+                hash = await usecases.saveURL(result);
+            }
         } catch (e) {
             return Boom.internal('ups, something went wrong!');
         }

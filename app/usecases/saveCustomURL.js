@@ -19,10 +19,10 @@ const saveCustomURL = async (url, hash) => {
     }
 
     // 2. if the url is already stored return the hash.
-    const customHash = await miniUrlDB.findUrlHash(url, true);
+    const foundURL = await miniUrlDB.findUrlEx(hash, true);
 
-    if (customHash) {
-        return customHash;
+    if (foundURL) {
+        return hash;
     }
 
     // 3. Otherwise store the URL and return the new hash.

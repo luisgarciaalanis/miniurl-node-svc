@@ -11,6 +11,7 @@ module.exports = {
             type: Sequelize.STRING,
             allowNull: false,
             primaryKey: true,
+            unique: false,
         },
         hash: {
             type: Sequelize.STRING,
