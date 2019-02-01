@@ -1,5 +1,6 @@
 const Boom = require('boom');
 const usecases = require('../../usecases');
+const { HashAlreadyTaken } = require('../../usecases/errors');
 
 class ShrinkURL {
     constructor() {
@@ -32,6 +33,9 @@ class ShrinkURL {
                 hash = await usecases.saveURL(result);
             }
         } catch (e) {
+            if (e instanceof HashAlreadyTaken) {
+                return Boom.conflict('Hash is already taken!');
+            }
             return Boom.internal('ups, something went wrong!');
         }
 
@@ -60,6 +64,10 @@ class ShrinkURL {
         try {
             url = usecases.urlFromString(rawURL);
         } catch (e) {
+            return Boom.badRequest('Invalid URL');
+        }
+
+        if (!usecases.isValidHost(url.host)) {
             return Boom.badRequest('Invalid URL');
         }
 

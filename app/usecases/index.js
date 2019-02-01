@@ -2,6 +2,7 @@ const saveURL = require('./saveURL');
 const urlFromString = require('./urlFromString');
 const urlFromHash = require('./urlFromHash');
 const isValidHash = require('./isValidHash');
+const isValidHost = require('./isValidHost');
 const saveCustomURL = require('./saveCustomURL');
 
 module.exports = {
@@ -9,5 +10,6 @@ module.exports = {
     urlFromString,
     urlFromHash,
     isValidHash,
+    isValidHost,
     saveCustomURL,
 };
