@@ -67,8 +67,8 @@ class ShrinkURL {
             return Boom.badRequest('Invalid URL');
         }
 
-        if (!usecases.isValidHost(url.host)) {
-            return Boom.badRequest('Invalid URL');
+        if (url.protocol === 'mailto:') {
+            return url.href;
         }
 
         // eslint-disable-next-line no-script-url
@@ -76,8 +76,8 @@ class ShrinkURL {
             return Boom.forbidden('javascript is not allowed!');
         }
 
-        if (url.protocol === 'mailto:') {
-            return url.href;
+        if (!usecases.isValidHost(url.host)) {
+            return Boom.badRequest('Invalid URL');
         }
 
         // URLs need to start with mailto:, http: or https:
