@@ -13,7 +13,7 @@ class ExpandURL {
         const hash = request.params.id.toLowerCase();
 
         if (!isValidHash(hash)) {
-            return Boom.notFound();
+            return Boom.badRequest();
         }
 
         try {
