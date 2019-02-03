@@ -40,27 +40,30 @@ describe('test saveURL...', () => {
     });
 
     describe('succeeds to', () => {
-        it('find URL hash', () => {
+        it('find URL hash', async () => {
+            const testURL = 'http://www.bam.com/';
             findUrlHashStub = sinon.stub(miniURLDB, 'findUrlHash').resolves('abcdef');
-            expect(usecases.saveURL('http://www.bam.com/')).resolves.toEqual('abcdef');
+            await expect(usecases.saveURL(testURL)).resolves.toEqual('abcdef');
+            expect(findUrlHashStub.calledWith(testURL));
         });
 
         it('save a url', async () => {
-            findUrlHashStub = sinon.stub(miniURLDB, 'findUrlHash').resolves(null);
-            reserveUrlStub = sinon.stub(miniURLDB, 'reserveUrl').resolves(123);
-            generateForIDStub = sinon.stub(hasher, 'generateForID').returns('superhash');
-            findUrlExStub = sinon.stub(miniURLDB, 'findUrlEx').resolves(null);
-            updateURLStub = sinon.stub(miniURLDB, 'updateURL').resolves('superhash');
-            expect(usecases.saveURL('http://www.bam.com/')).resolves.toEqual('superhash');
-        });
+            const testURL = 'http://www.yahoo.com/';
+            const ID = 123;
+            const testHash = 'superhash';
 
-        it('save a custom url', async () => {
             findUrlHashStub = sinon.stub(miniURLDB, 'findUrlHash').resolves(null);
-            reserveUrlStub = sinon.stub(miniURLDB, 'reserveUrl').resolves(123);
-            generateForIDStub = sinon.stub(hasher, 'generateForID').returns('superhash');
+            reserveUrlStub = sinon.stub(miniURLDB, 'reserveUrl').resolves(ID);
+            generateForIDStub = sinon.stub(hasher, 'generateForID').returns(testHash);
             findUrlExStub = sinon.stub(miniURLDB, 'findUrlEx').resolves(null);
-            updateURLStub = sinon.stub(miniURLDB, 'updateURL').resolves('superhash');
-            expect(usecases.saveURL('http://www.bam.com/')).resolves.toEqual('superhash');
+            updateURLStub = sinon.stub(miniURLDB, 'updateURL').resolves(testHash);
+
+            await expect(usecases.saveURL(testURL)).resolves.toEqual(testHash);
+            expect(findUrlHashStub.calledWith(testURL));
+            expect(reserveUrlStub.called);
+            expect(generateForIDStub.calledWith(ID));
+            expect(generateForIDStub.calledWith(testHash, true));
+            expect(updateURLStub.calledWith(ID, testURL, testHash));
         });
     });
 
