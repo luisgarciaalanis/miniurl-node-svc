@@ -31,7 +31,7 @@ const isValidHost = (host) => {
             break;
         }
 
-        if (!labelExp.test(host) && !labelNoDashExp.test(host)) {
+        if (!labelExp.test(hostParts[index]) && !labelNoDashExp.test(hostParts[index])) {
             isValid = false;
             break;
         }

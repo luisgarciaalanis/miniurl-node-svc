@@ -9,7 +9,8 @@ describe('test saveURL...', () => {
     let findUrlHashStub = null;
     let reserveUrlStub = null;
     let generateForIDStub = null;
-    let storeUrlStub = null;
+    let updateURLStub = null;
+    let findUrlExStub = null;
 
     afterEach(() => {
         if (findUrlHashStub) {
@@ -27,9 +28,14 @@ describe('test saveURL...', () => {
             generateForIDStub = null;
         }
 
-        if (storeUrlStub) {
-            storeUrlStub.restore();
-            storeUrlStub = null;
+        if (updateURLStub) {
+            updateURLStub.restore();
+            updateURLStub = null;
+        }
+
+        if (findUrlExStub) {
+            findUrlExStub.restore();
+            findUrlExStub = null;
         }
     });
 
@@ -43,8 +49,18 @@ describe('test saveURL...', () => {
             findUrlHashStub = sinon.stub(miniURLDB, 'findUrlHash').resolves(null);
             reserveUrlStub = sinon.stub(miniURLDB, 'reserveUrl').resolves(123);
             generateForIDStub = sinon.stub(hasher, 'generateForID').returns('superhash');
-            storeUrlStub = sinon.stub(miniURLDB, 'storeUrl').resolves('superhash');
-            expect(await usecases.saveURL('http://www.bam.com/')).toEqual('superhash');
+            findUrlExStub = sinon.stub(miniURLDB, 'findUrlEx').resolves(null);
+            updateURLStub = sinon.stub(miniURLDB, 'updateURL').resolves('superhash');
+            expect(usecases.saveURL('http://www.bam.com/')).resolves.toEqual('superhash');
+        });
+
+        it('save a custom url', async () => {
+            findUrlHashStub = sinon.stub(miniURLDB, 'findUrlHash').resolves(null);
+            reserveUrlStub = sinon.stub(miniURLDB, 'reserveUrl').resolves(123);
+            generateForIDStub = sinon.stub(hasher, 'generateForID').returns('superhash');
+            findUrlExStub = sinon.stub(miniURLDB, 'findUrlEx').resolves(null);
+            updateURLStub = sinon.stub(miniURLDB, 'updateURL').resolves('superhash');
+            expect(usecases.saveURL('http://www.bam.com/')).resolves.toEqual('superhash');
         });
     });
 
@@ -52,8 +68,9 @@ describe('test saveURL...', () => {
         it('reserve URL', () => {
             findUrlHashStub = sinon.stub(miniURLDB, 'findUrlHash').resolves(null);
             reserveUrlStub = sinon.stub(miniURLDB, 'reserveUrl').rejects('test reject');
-            generateForIDStub = sinon.stub(hasher, 'generateForID').returns('superhash');
-            storeUrlStub = sinon.stub(miniURLDB, 'storeUrl').resolves('superhash');
+            generateForIDStub = sinon.stub(hasher, 'generateForID').returns('Should not be here');
+            findUrlExStub = sinon.stub(miniURLDB, 'findUrlEx').resolves('Should not be here');
+            updateURLStub = sinon.stub(miniURLDB, 'updateURL').resolves('Should not be here');
             return expect(usecases.saveURL('http://www.bam.com/')).rejects.toThrow();
         });
 
@@ -61,7 +78,8 @@ describe('test saveURL...', () => {
             findUrlHashStub = sinon.stub(miniURLDB, 'findUrlHash').resolves(null);
             reserveUrlStub = sinon.stub(miniURLDB, 'reserveUrl').resolves(123);
             generateForIDStub = sinon.stub(hasher, 'generateForID').returns('superhash');
-            storeUrlStub = sinon.stub(miniURLDB, 'storeUrl').rejects('test reject');
+            findUrlExStub = sinon.stub(miniURLDB, 'findUrlEx').resolves(null);
+            updateURLStub = sinon.stub(miniURLDB, 'updateURL').rejects('test reject');
             return expect(usecases.saveURL('http://www.bam.com/')).rejects.toThrow();
         });
     });

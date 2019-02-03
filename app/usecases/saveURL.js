@@ -25,7 +25,10 @@ const saveURL = async (url) => {
         const foundCustom = await miniUrlDB.findUrlEx(hash, true);
 
         if (!foundCustom) {
-            saved = await miniUrlDB.updateURL(newUrlID, url, hash);
+            if (await miniUrlDB.updateURL(newUrlID, url, hash)) {
+                saved = true;
+            }
+            break;
         }
     }
     /* eslint-enable no-await-in-loop */

@@ -5,6 +5,7 @@
 const isValidHash = (hash) => {
     const maxSize = 20;
     const regExp = /^[a-zA-Z0-9]+[a-zA-Z0-9-]*[a-zA-Z0-9]+$/;
+    const regExp2 = /^[a-zA-Z0-9]+$/;
 
     if (!hash) {
         return false;
@@ -14,7 +15,7 @@ const isValidHash = (hash) => {
         return false;
     }
 
-    return regExp.test(hash);
+    return regExp.test(hash) || regExp2.test(hash);
 };
 
 module.exports = isValidHash;
