@@ -25,6 +25,7 @@ const longURL = (size) => {
 
 describe('test shrinkURL...', () => {
     let saveURLStub = null;
+    let saveCustomURLStub = null;
 
     beforeAll(async () => {
         await server.start();
@@ -39,30 +40,65 @@ describe('test shrinkURL...', () => {
             saveURLStub.restore();
             saveURLStub = null;
         }
+
+        if (saveCustomURLStub) {
+            saveCustomURLStub.restore();
+            saveCustomURLStub = null;
+        }
     });
 
     describe('handler with good URLS', () => {
         const tests = [
-            { url: 'http://www.google.com', status: 200, hash: 'abcd' },
-            { url: '//www.starwars.com', status: 200, hash: 'lala' },
-            { url: '//www.sony.com/cool', status: 200, hash: 'dddd' },
-            { url: 'mailto:homer@simpsons.com', status: 200, hash: 'poiu' },
+            { urlInput: 'http://www.google.com', urlStore: 'http://www.google.com/', status: 200, hash: 'secret' },
+            { urlInput: '//www.starwars.com', urlStore: 'http://www.starwars.com/', status: 200, hash: 'custom-hash' },
+            { urlInput: '//www.sony.com/cool', urlStore: 'http://www.sony.com/cool', status: 200, hash: 'google' },
+            { urlInput: 'mailto:homer@simpsons.com', urlStore: 'mailto:homer@simpsons.com', status: 200, hash: 'super-mario-bros' },
         ];
 
         tests.forEach((test) => {
-            it(`URL: ${test.url}`, async () => {
+            it(`URL: ${test.urlInput}`, async () => {
                 saveURLStub = sinon.stub(usecases, 'saveURL').resolves(test.hash);
                 const options = {
                     method: 'POST',
                     url: '/api/v1/shrink',
                     payload: {
-                        url: test.url,
+                        url: test.urlInput,
                     },
                 };
 
                 const response = await server.server.inject(options);
                 expect(response.statusCode).toBe(test.status);
                 expect(response.result).toMatchObject({ hash: test.hash });
+                expect(saveURLStub.calledWith(test.urlStore)).toBe(true);
+            });
+        });
+    });
+
+
+    describe('handler with good URLS with custom alias', () => {
+        const tests = [
+            { urlInput: 'http://www.google.com', urlStore: 'http://www.google.com/', status: 200, hash: 'secret' },
+            { urlInput: '//www.starwars.com', urlStore: 'http://www.starwars.com/', status: 200, hash: 'custom-hash' },
+            { urlInput: '//www.sony.com/cool', urlStore: 'http://www.sony.com/cool', status: 200, hash: 'google' },
+            { urlInput: 'mailto:homer@simpsons.com', urlStore: 'mailto:homer@simpsons.com', status: 200, hash: 'super-mario-bros' },
+        ];
+
+        tests.forEach((test) => {
+            it(`URL: ${test.urlInput} Custom HASH: ${test.hash}`, async () => {
+                saveCustomURLStub = sinon.stub(usecases, 'saveCustomURL').resolves(test.hash);
+                const options = {
+                    method: 'POST',
+                    url: '/api/v1/shrink',
+                    payload: {
+                        url: test.urlInput,
+                        hash: test.hash,
+                    },
+                };
+
+                const response = await server.server.inject(options);
+                expect(response.statusCode).toBe(test.status);
+                expect(response.result).toMatchObject({ hash: test.hash });
+                expect(saveCustomURLStub.calledWith(test.urlStore, test.hash)).toBe(true);
             });
         });
     });
@@ -71,6 +107,7 @@ describe('test shrinkURL...', () => {
         const tests = [
             { url: 'http://www.goo gle.com', status: 400, error: 'Bad Request', message: 'Invalid URL' },
             { url: '', status: 400, error: 'Bad Request', message: 'Missing URL' },
+            { url: 'a!a', status: 400, error: 'Bad Request', message: 'Invalid URL' },
             { url: 'javascript:', status: 403, error: 'Forbidden', message: 'javascript is not allowed!' },
             { url: 'ftp://ftp.google.com', status: 400, error: 'Bad Request', message: 'Invalid URL' },
             { url: longURL(2200), status: 414, error: 'Request-URI Too Large', message: 'URL should be less or equal to 2083 characters!' },
@@ -94,5 +131,19 @@ describe('test shrinkURL...', () => {
                 expect(response.result.message).toBe(test.message);
             });
         });
+    });
+
+    it('url with bad custom alias', async () => {
+        const options = {
+            method: 'POST',
+            url: '/api/v1/shrink',
+            payload: {
+                url: 'www.golang.com',
+                hash: 'bad hash',
+            },
+        };
+
+        const response = await server.server.inject(options);
+        expect(response.statusCode).toBe(400);
     });
 });

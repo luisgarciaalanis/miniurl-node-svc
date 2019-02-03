@@ -3,6 +3,10 @@ module.exports = {
     collectCoverageFrom: [
         'app/**/*.js',
     ],
+    coveragePathIgnorePatterns: [
+        'app/app.js',
+        'app/stores/MiniURLDB/Models/Urls.js',
+    ],
     coverageThreshold: {
         global: {
             branches: 90,
