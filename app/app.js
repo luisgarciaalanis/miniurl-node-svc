@@ -17,7 +17,7 @@ class App {
             return;
         }
 
-        server.start();
+        await server.start();
     }
 }
 
