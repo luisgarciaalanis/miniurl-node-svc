@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+const db = require('sequelize');
 const appSettings = require('../../core/settings/AppSettings');
 const log = require('../../core/log');
 const models = require('./Models');
@@ -17,14 +17,12 @@ class MiniURLDB {
      * initializes the database connection.
      */
     async init() {
-        let connected = false;
-
         const dbSchema = appSettings.valueOf(appSettings.DB_SCHEMA);
         const dbUsername = appSettings.valueOf(appSettings.DB_USERNAME);
         const dbPassword = appSettings.valueOf(appSettings.DB_PASSWORD);
         const dbHost = appSettings.valueOf(appSettings.DB_HOST);
 
-        this.db = new Sequelize(dbSchema, dbUsername, dbPassword, {
+        this.db = new db.Sequelize(dbSchema, dbUsername, dbPassword, {
             host: dbHost,
             dialect: 'mysql',
             operatorsAliases: false,
@@ -38,14 +36,12 @@ class MiniURLDB {
 
         try {
             await this.db.authenticate();
-            connected = true;
         } catch (e) {
             log.error(e);
+            return false;
         }
 
-        models.init(this.db);
-
-        return connected;
+        return models.init(this.db);
     }
 
 
@@ -53,16 +49,17 @@ class MiniURLDB {
      * Reserves a URL in the database and returns the id.
      */
     async reserveUrl() {
-        let newUrl = -1;
+        let result = null;
+
         try {
-            newUrl = await models.urls.create();
+            result = await models.urls.create();
         } catch (e) {
             log.error('reserveUrl: Unable to reserve index for new URL hash.');
             log.error(e);
             throw e;
         }
 
-        return newUrl.id;
+        return result.id;
     }
 
     /**
@@ -76,7 +73,7 @@ class MiniURLDB {
 
         try {
             foundUrl = await models.urls.findOne({
-                where: Sequelize.and({ url }, { isCustom }),
+                where: db.Sequelize.and({ url }, { isCustom }),
             });
         } catch (e) {
             log.error('findUrlHash failed to fetchOne url');
@@ -102,7 +99,7 @@ class MiniURLDB {
 
         try {
             foundUrl = await models.urls.findOne({
-                where: Sequelize.and({ hash }, { isCustom }),
+                where: db.Sequelize.and({ hash }, { isCustom }),
             });
         } catch (e) {
             log.error('findUrl: failed to fetchOne url');
@@ -129,29 +126,6 @@ class MiniURLDB {
             foundUrl = await models.urls.findOne({ where: { hash } });
         } catch (e) {
             log.error('findUrl: failed to fetchOne url');
-            log.error(e);
-            throw e;
-        }
-
-        if (!foundUrl) {
-            return null;
-        }
-
-        return foundUrl.url;
-    }
-
-    /**
-     * finds a url for a hash.
-     * @param {string} hash
-     * @returns {string|null} the url if found null otherwise.
-     */
-    async findAnyUrl(hash) {
-        let foundUrl = null;
-
-        try {
-            foundUrl = await models.urls.findOne({ where: { hash } });
-        } catch (e) {
-            log.error('findAnyUrl: failed to fetchOne url');
             log.error(e);
             throw e;
         }
