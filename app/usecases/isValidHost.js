@@ -10,7 +10,7 @@ const isValidHost = (host) => {
     */
     const maxUrlSize = 253;
 
-    if (host.length > maxUrlSize) {
+    if (!host || (host.length > maxUrlSize)) {
         return false;
     }
 
@@ -28,6 +28,10 @@ const isValidHost = (host) => {
 
         if ((hostParts[index].length === 0) && ((hostParts.length === 1) || (index < (hostParts.length - 1)))) {
             isValid = false;
+            break;
+        }
+
+        if ((index > 0) && (index === (hostParts.length - 1)) && (hostParts[index].length === 0)) {
             break;
         }
 
