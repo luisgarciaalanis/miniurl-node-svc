@@ -1,6 +1,7 @@
+const Hapi = require('hapi');
 const sinon = require('sinon');
-const server = require('../index');
 const usecases = require('../../usecases');
+const routes = require('../routes');
 
 /* global it, describe, expect, beforeAll, afterAll, afterEach */
 
@@ -26,13 +27,16 @@ const longURL = (size) => {
 describe('test shrinkURL...', () => {
     let saveURLStub = null;
     let saveCustomURLStub = null;
+    let server = null;
 
-    beforeAll(async () => {
-        await server.start();
+    beforeAll(() => {
+        server = new Hapi.Server();
+        server.route(routes);
     });
 
-    afterAll(async () => {
-        await server.stop();
+    afterAll(() => {
+        server.close();
+        server = null;
     });
 
     afterEach(() => {
@@ -66,7 +70,7 @@ describe('test shrinkURL...', () => {
                     },
                 };
 
-                const response = await server.server.inject(options);
+                const response = await server.inject(options);
                 expect(response.statusCode).toBe(test.status);
                 expect(response.result).toMatchObject({ hash: test.hash });
                 expect(saveURLStub.calledWith(test.urlStore)).toBe(true);
@@ -95,7 +99,7 @@ describe('test shrinkURL...', () => {
                     },
                 };
 
-                const response = await server.server.inject(options);
+                const response = await server.inject(options);
                 expect(response.statusCode).toBe(test.status);
                 expect(response.result).toMatchObject({ hash: test.hash });
                 expect(saveCustomURLStub.calledWith(test.urlStore, test.hash)).toBe(true);
@@ -124,7 +128,7 @@ describe('test shrinkURL...', () => {
                     },
                 };
 
-                const response = await server.server.inject(options);
+                const response = await server.inject(options);
 
                 expect(response.result.statusCode).toBe(test.status);
                 expect(response.result.error).toBe(test.error);
@@ -143,7 +147,7 @@ describe('test shrinkURL...', () => {
             },
         };
 
-        const response = await server.server.inject(options);
+        const response = await server.inject(options);
         expect(response.statusCode).toBe(400);
     });
 });

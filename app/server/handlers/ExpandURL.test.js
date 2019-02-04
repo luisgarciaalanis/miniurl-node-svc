@@ -1,18 +1,22 @@
+const Hapi = require('hapi');
 const sinon = require('sinon');
-const server = require('../index');
 const usecases = require('../../usecases');
+const routes = require('../routes');
 
 /* global it, describe, expect, beforeAll, afterAll, afterEach */
 
 describe('test expandURL...', () => {
     let urlFromHashStub = null;
+    let server = null;
 
-    beforeAll(async () => {
-        await server.start();
+    beforeAll(() => {
+        server = new Hapi.Server();
+        server.route(routes);
     });
 
-    afterAll(async () => {
-        await server.stop();
+    afterAll(() => {
+        server.close();
+        server = null;
     });
 
     afterEach(() => {
@@ -38,7 +42,7 @@ describe('test expandURL...', () => {
                     url: `/${test.hash}`,
                 };
 
-                const response = await server.server.inject(options);
+                const response = await server.inject(options);
                 expect(urlFromHashStub.calledWith(test.hash)).toBe(true);
                 expect(response.statusCode).toBe(test.status);
                 expect(response.headers.location).toBe(test.url);
@@ -63,7 +67,7 @@ describe('test expandURL...', () => {
                     url: `/${test.hash}`,
                 };
 
-                const response = await server.server.inject(options);
+                const response = await server.inject(options);
                 expect(response.statusCode).toBe(test.status);
             });
         });
@@ -78,7 +82,7 @@ describe('test expandURL...', () => {
 
         urlFromHashStub = sinon.stub(usecases, 'urlFromHash').rejects();
 
-        const response = await server.server.inject(options);
+        const response = await server.inject(options);
         expect(urlFromHashStub.calledWith(testHash)).toBe(true);
         expect(response.statusCode).toBe(404);
         expect(urlFromHashStub.calledWith(testHash)).toBe(true);

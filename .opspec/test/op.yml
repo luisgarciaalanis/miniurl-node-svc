@@ -30,7 +30,7 @@ run:
         ref: init
         inputs: { appDir }
     - container:
-        image: { ref: 'node:10.15-alpine' }
+        image: { ref: 'node:stretch-slim' }
         name: miniurl-svc
         envVars:
           DB_USERNAME:
