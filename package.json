@@ -5,8 +5,8 @@
   "main": "app/app.js",
   "scripts": {
     "start": "nodemon --inspect app/app.js",
-    "test": "jest --verbose",
-    "coverage": "jest --coverage"
+    "test": "jest --color=false --verbose",
+    "coverage": "jest --color=false --coverage --verbose"
   },
   "author": "Luis Garcia Alanis",
   "license": "ISC",
