@@ -1,5 +1,5 @@
-name: debug
-description: runs application for debug
+name: test
+description: runs application tests
 inputs:
   DB_USERNAME:
     string:
@@ -39,9 +39,6 @@ run:
           DB_PORT:
           DB_SCHEMA:
         dirs: { '/app': $(appDir) }
-        cmd: ['npx', 'nodemon', '--inspect', 'app/app.js']
+        cmd: ['npm', 'run', 'test']
         workDir: '/app'
-        ports: 
-          '7777': '7777'
-          '9229': '9229'
 

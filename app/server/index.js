@@ -5,15 +5,29 @@ const routes = require('./routes');
 class Server {
     constructor() {
         this.server = Hapi.server({
-            port: 7000,
+            port: 7777,
             host: '0.0.0.0',
         });
 
         this.server.route(routes);
 
         process.on('unhandledRejection', (err) => {
+            this.server.close();
             log.error(err);
-            process.exit(1);
+        });
+
+        process.on('SIGTERM', (err) => {
+            this.server.close();
+            log.error(err);
+        });
+
+        process.on('uncaughtException', (err) => {
+            this.server.close();
+            log.error(err);
+        });
+
+        process.on('exit', () => {
+            this.server.close();
         });
     }
 
