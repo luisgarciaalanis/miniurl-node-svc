@@ -34,13 +34,13 @@ const valueOf = (setting) => {
     let value = '';
 
     switch (setting) {
-        case appSettings.DB_USERNAME:
+        case appSettings.dbUsername:
             value = 'bart';
             break;
-        case appSettings.DB_PASSWORD:
+        case appSettings.dbPassword:
             value = 'password123';
             break;
-        case appSettings.DB_SCHEMA:
+        case appSettings.dbSchema:
             value = 'dbSchema';
             break;
         default:

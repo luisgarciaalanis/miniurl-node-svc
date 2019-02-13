@@ -1,23 +1,21 @@
 name: debug
 description: runs application for debug
 inputs:
-  DB_USERNAME:
+  dbUsername:
     string:
       description: username to connect to the database
-      default: root
-  DB_PASSWORD:
+  dbPassword:
     string:
       description: password to connect to the database
-      default: password
-  DB_HOST:
+  dbHost:
     string:
       description: database host
-      default: miniurldb
-  DB_PORT:
+      default: mysqldb
+  dbPort:
     string:
       description: database port
       default: '3306'
-  DB_SCHEMA:
+  dbSchema:
     string:
       description: name of the database to be created
       default: miniurl
@@ -29,19 +27,44 @@ run:
     - op:
         ref: init
         inputs: { appDir }
-    - container:
-        image: { ref: 'node:10.15-alpine' }
-        name: miniurl-svc
-        envVars:
-          DB_USERNAME:
-          DB_PASSWORD:
-          DB_HOST:
-          DB_PORT:
-          DB_SCHEMA:
-        dirs: { '/app': $(appDir) }
-        cmd: ['npx', 'nodemon', '--inspect', 'app/app.js']
-        workDir: '/app'
-        ports: 
-          '7777': '7777'
-          '9229': '9229'
+    - op:
+        ref: db-init
+        inputs: { appDir }
+    - parallel:
+        - op:
+            ref: 'github.com/opspec-pkgs/mysql.db.run#1.0.0'
+            inputs: {
+              dbUsername,
+              dbPassword,
+              dbSchema,
+              dbDataRootDir: $(appDir/db/data),
+              dbUseNativePassword: true
+            }
+        - serial:
+          - op:
+              ref: 'github.com/opspec-pkgs/mysql.db.waitready#1.0.0'
+              inputs: {
+                mysqlHost: $(dbHost),
+                mysqlUsername: $(dbUsername),
+                mysqlPassword: $(dbPassword),
+                mysqlSchema: $(dbSchema)
+              }
+          - op:
+              ref: db-migrate
+              inputs: { appDir, dbHost, dbUsername, dbPassword, dbSchema }
+          - container:
+              image: { ref: 'node:10.15-alpine' }
+              name: miniurl-svc
+              envVars:
+                dbUsername:
+                dbPassword:
+                dbHost:
+                dbPort:
+                dbSchema:
+              dirs: { '/app': $(appDir) }
+              cmd: ['npx', 'nodemon', '--inspect', 'app/app.js']
+              workDir: '/app'
+              ports: 
+                '7777': '7777'
+                '9229': '9229'
 

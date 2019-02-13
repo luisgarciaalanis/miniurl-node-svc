@@ -5,11 +5,11 @@ inputs:
     dir:
       description: Application root direactory
       default: .
-  DB_PASSWORD:
+  dbPassword:
     string:
       description: password to connect to the database
       default: password
-  DB_SCHEMA:
+  dbSchema:
     string:
       description: name of the database to be created
       default: miniurl
@@ -28,6 +28,6 @@ run:
           /etc/mysql/conf.d/mysqld_settings.cnf: $(mysqlCnf) 
         dirs: { '/var/lib/mysql': $(appDir/db/data/mysql) }
         envVars:
-          MYSQL_ROOT_PASSWORD: $(DB_PASSWORD)
-          MYSQL_DATABASE: $(DB_SCHEMA)
+          MYSQL_ROOT_PASSWORD: $(dbPassword)
+          MYSQL_DATABASE: $(dbSchema)
         ports: { '3306':'3306' }

@@ -1,11 +1,20 @@
 name: db-migrate
 description: runs database migration
 inputs:
-  DB_PASSWORD:
+  dbHost:
+    string:
+      description: db host
+      constraints: { minLength: 1 }
+  dbUsername:
+    string:
+      description: username to connect to the database
+      constraints: { minLength: 1 }
+  dbPassword:
     string:
       description: password to connect to the database
-      default: password
-  DB_SCHEMA:
+      isSecret: true
+      constraints: { minLength: 1 }
+  dbSchema:
     string:
       description: name of the database to be created
       default: miniurl
@@ -20,8 +29,10 @@ run:
     - container:
         image: { ref: 'node:10.15-alpine' }
         envVars:
-          DB_PASSWORD:
-          DB_SCHEMA:
+          dbHost:
+          dbUsername:
+          dbPassword:
+          dbSchema:
         dirs: { '/app': $(appDir) }
         cmd: ['npx', 'sequelize', 'db:migrate']
         workDir: '/app'

@@ -1,23 +1,23 @@
 name: test
 description: runs application tests
 inputs:
-  DB_USERNAME:
+  dbUsername:
     string:
       description: username to connect to the database
       default: root
-  DB_PASSWORD:
+  dbPassword:
     string:
       description: password to connect to the database
       default: password
-  DB_HOST:
+  dbHost:
     string:
       description: database host
       default: miniurldb
-  DB_PORT:
+  dbPort:
     string:
       description: database port
       default: '3306'
-  DB_SCHEMA:
+  dbSchema:
     string:
       description: name of the database to be created
       default: miniurl
@@ -33,11 +33,11 @@ run:
         image: { ref: 'node:stretch-slim' }
         name: miniurl-svc
         envVars:
-          DB_USERNAME:
-          DB_PASSWORD:
-          DB_HOST:
-          DB_PORT:
-          DB_SCHEMA:
+          dbUsername:
+          dbPassword:
+          dbHost:
+          dbPort:
+          dbSchema:
         dirs: { '/app': $(appDir) }
         cmd: ['npm', 'run', 'test']
         workDir: '/app'

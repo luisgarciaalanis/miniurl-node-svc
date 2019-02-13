@@ -7,18 +7,18 @@ const Setting = require('./Setting');
 class AppSettings {
     constructor() {
         // constants for the application settings.
-        this.DB_USERNAME = 'DB_USERNAME';
-        this.DB_PASSWORD = 'DB_PASSWORD';
-        this.DB_HOST = 'DB_HOST';
-        this.DB_PORT = 'DB_PORT';
-        this.DB_SCHEMA = 'DB_SCHEMA';
+        this.dbUsername = 'dbUsername';
+        this.dbPassword = 'dbPassword';
+        this.dbHost = 'dbHost';
+        this.dbPort = 'dbPort';
+        this.dbSchema = 'dbSchema';
 
         this.settings = [
-            new Setting(this.DB_USERNAME, true, false),
-            new Setting(this.DB_PASSWORD, true, true),
-            new Setting(this.DB_HOST, true, false),
-            new Setting(this.DB_PORT, true, false),
-            new Setting(this.DB_SCHEMA, true, false),
+            new Setting(this.dbUsername, true, false),
+            new Setting(this.dbPassword, true, true),
+            new Setting(this.dbHost, true, false),
+            new Setting(this.dbPort, true, false),
+            new Setting(this.dbSchema, true, false),
         ];
     }
 

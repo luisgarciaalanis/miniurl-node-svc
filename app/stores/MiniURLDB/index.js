@@ -17,10 +17,10 @@ class MiniURLDB {
      * initializes the database connection.
      */
     async init() {
-        const dbSchema = appSettings.valueOf(appSettings.DB_SCHEMA);
-        const dbUsername = appSettings.valueOf(appSettings.DB_USERNAME);
-        const dbPassword = appSettings.valueOf(appSettings.DB_PASSWORD);
-        const dbHost = appSettings.valueOf(appSettings.DB_HOST);
+        const dbSchema = appSettings.valueOf(appSettings.dbSchema);
+        const dbUsername = appSettings.valueOf(appSettings.dbUsername);
+        const dbPassword = appSettings.valueOf(appSettings.dbPassword);
+        const dbHost = appSettings.valueOf(appSettings.dbHost);
 
         this.db = new db.Sequelize(dbSchema, dbUsername, dbPassword, {
             host: dbHost,

@@ -20,21 +20,21 @@ describe('Test appSettings...', () => {
         });
 
         it('valid settings', () => {
-            process.env.DB_USERNAME = 'frodo';
-            process.env.DB_PASSWORD = 'super secret password';
-            process.env.DB_HOST = 'mordor.com';
-            process.env.DB_PORT = '9999';
-            process.env.DB_SCHEMA = 'lodr';
+            process.env.dbUsername = 'frodo';
+            process.env.dbPassword = 'super secret password';
+            process.env.dbHost = 'mordor.com';
+            process.env.dbPort = '9999';
+            process.env.dbSchema = 'lodr';
 
             expect(appSettings.ok()).toBe(true);
         });
 
         it('valid missing required field', () => {
-            process.env.DB_USERNAME = 'frodo';
-            process.env.DB_PASSWORD = 'super secret password';
-            delete process.env.DB_HOST;
-            process.env.DB_PORT = '9999';
-            process.env.DB_SCHEMA = 'lodr';
+            process.env.dbUsername = 'frodo';
+            process.env.dbPassword = 'super secret password';
+            delete process.env.dbHost;
+            process.env.dbPort = '9999';
+            process.env.dbSchema = 'lodr';
 
             expect(appSettings.ok()).toBe(false);
         });
@@ -45,8 +45,8 @@ describe('Test appSettings...', () => {
          */
         describe('exist functionality', () => {
             it('settings exist', () => {
-                process.env.DB_USERNAME = 'frodo';
-                expect(appSettings.exist('DB_USERNAME')).toBe(true);
+                process.env.dbUsername = 'frodo';
+                expect(appSettings.exist('dbUsername')).toBe(true);
             });
 
             it('settings does not exist', () => {
@@ -59,8 +59,8 @@ describe('Test appSettings...', () => {
          */
         describe('valueOf functionality', () => {
             it('settings exist', () => {
-                process.env.DB_USERNAME = 'bilbo';
-                expect(appSettings.valueOf('DB_USERNAME')).toBe('bilbo');
+                process.env.dbUsername = 'bilbo';
+                expect(appSettings.valueOf('dbUsername')).toBe('bilbo');
             });
 
             it('settings does not exist', () => {
