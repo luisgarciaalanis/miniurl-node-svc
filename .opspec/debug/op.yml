@@ -21,6 +21,7 @@ inputs:
       default: miniurl
   appDir:
     dir:
+      description: application directory
       default: .
 run:
   serial:
