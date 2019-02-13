@@ -1,4 +1,4 @@
-name: db-init
+name: db/init
 description: Initializes DB
 inputs:
   appDir:

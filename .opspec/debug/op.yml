@@ -28,7 +28,7 @@ run:
         ref: init
         inputs: { appDir }
     - op:
-        ref: db-init
+        ref: db/init
         inputs: { appDir }
     - parallel:
         - op:
@@ -37,7 +37,7 @@ run:
               dbUsername,
               dbPassword,
               dbSchema,
-              dbDataRootDir: $(appDir/db/data),
+              dbDataRootDir: $(appDir/data),
               dbUseNativePassword: true
             }
         - serial:
@@ -50,7 +50,7 @@ run:
                 mysqlSchema: $(dbSchema)
               }
           - op:
-              ref: db-migrate
+              ref: db/migrate
               inputs: { appDir, dbHost, dbUsername, dbPassword, dbSchema }
           - container:
               image: { ref: 'node:10.15-alpine' }

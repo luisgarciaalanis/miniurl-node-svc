@@ -1,4 +1,4 @@
-name: db-migrate
+name: db/migrate
 description: runs database migration
 inputs:
   dbHost:

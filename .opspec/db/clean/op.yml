@@ -1,4 +1,4 @@
-name: db-clean
+name: db/clean
 description: Cleans the DB data folder
 inputs:
   appDir:
