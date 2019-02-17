@@ -7,6 +7,7 @@ describe('test errors...', () => {
         try {
             throw new HashAlreadyTaken('some msg');
         } catch (e) {
+
             expect(e instanceof HashAlreadyTaken).toBe(false);
             expect(e.message).toEqual('some msg');
         }
