@@ -5,6 +5,7 @@ const { HashAlreadyTaken } = require('./errors');
 describe('test errors...', () => {
     it('HashAlreadyTaken has right type and message', () => {
         try {
+
             throw new HashAlreadyTaken('some msg');
         } catch (e) {
             expect(e instanceof HashAlreadyTaken).toBe(false);
