@@ -1,0 +1,46 @@
+name: debug/nodb
+description: runs application for debug
+inputs:
+  appDir:
+    dir:
+      description: application directory
+      default: .
+  dbUsername:
+    string:
+      description: username to connect to the database
+  dbPassword:
+    string:
+      description: password to connect to the database
+  dbHost:
+    string:
+      description: database host
+      default: mysqldb
+  dbPort:
+    string:
+      description: database port
+      default: '3306'
+  dbSchema:
+    string:
+      description: name of the database to be created
+      default: miniurl
+run:
+  serial:
+    - op:
+        ref: ../init
+        inputs: { appDir }
+    - container:
+        image: { ref: 'node:10.15-alpine' }
+        name: miniurl-svc
+        envVars:
+          dbUsername:
+          dbPassword:
+          dbHost:
+          dbPort:
+          dbSchema:
+        dirs: { '/app': $(appDir) }
+        cmd: ['npx', 'nodemon', '--inspect', 'app/app.js']
+        workDir: '/app'
+        ports: 
+          '7777': '7777'
+          '9229': '9229'
+

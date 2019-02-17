@@ -15,6 +15,10 @@ inputs:
       constraints: { minLength: 1 }
       description: Dockerhub registry password
       isSecret: true
+  imageTag:
+    string:
+      constraints: { minLength: 1 }
+      description: image tag name
 run:
   serial:
     - op:
@@ -24,10 +28,6 @@ run:
     - op:
         pkg: { ref: test }
         inputs: { appDir }
-    - op:
-        pkg: { ref: github.com/opspec-pkgs/git.repo.resolve-commit#1.0.2 }
-        inputs: { dotGitDir: $(appDir/.git) }
-        outputs: { imageTag: commit }
     - op:
         pkg: { ref: github.com/opspec-pkgs/docker.image.build#2.1.0 }
         inputs:
