@@ -1,5 +1,5 @@
 name: debug
-description: runs application for debug
+description: runs test database and application for debug
 inputs:
   dbUsername:
     string:
