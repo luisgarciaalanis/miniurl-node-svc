@@ -2,7 +2,7 @@ FROM node:10.15-alpine
 
 EXPOSE 7777
 
-WORKDIR /opt/miniurl
+WORKDIR /app
 
 COPY app/ app
 COPY db/ db
