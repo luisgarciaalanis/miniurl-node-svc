@@ -92,7 +92,7 @@ class ShrinkURL {
          * 2) get IPs of host machine
          * 3) get hostname of URL being shrunk and run it against a DNS service.
          * 4) Make sure the ip does not match any of our IPs or fail otherwise. * */
-        if (url.hostname === 'm.garcia.tv' || url.hostname === '13.91.40.170') {
+        if (url.hostname === 'm.garcia.tv' || url.hostname === '192.241.208.204') {
             return Boom.forbidden('Nice try!!! you script kiddie!');
         }
 
